@@ -14,15 +14,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+manifestcreator
+
+Quickly create Munki manifests based on a CSV template.
+
+positional arguments:
+  file        Path to the CSV template file.
+
+optional arguments:
+  -h, --help  show this help message and exit
+"""
+
 import csv
 import shutil
 import argparse
 
-p = argparse.ArgumentParser()
-p.add_argument("file")
+p = argparse.ArgumentParser(
+    description="Quickly create Munki manifests based on a CSV template.")
+p.add_argument(
+    "file",
+    help="Path to the CSV template file.")
 arguments = p.parse_args()
 
 with open(arguments.file, 'rb') as f:
     reader = csv.reader(f)
     for row in reader:
-        shutil.copyfile('/Volumes/munki/manifests/Template', '/Volumes/munki/manifests/' + row[0])
+        shutil.copyfile(
+            '/Volumes/munki/manifests/Template', '/Volumes/munki/manifests/' + row[0])
