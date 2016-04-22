@@ -20,10 +20,11 @@ manifestcreator
 Quickly create Munki manifests based on a CSV template.
 
 positional arguments:
-  file        Path to the CSV template file.
+  file           Path to the CSV template file.
 
 optional arguments:
-  -h, --help  show this help message and exit
+  -h, --help     show this help message and exit
+  -v, --verbose  Outputs the path to each manifest as it is created.
 """
 
 import csv
@@ -35,6 +36,10 @@ p = argparse.ArgumentParser(
 p.add_argument(
     "file",
     help="Path to the CSV template file.")
+p.add_argument(
+    "-v", "--verbose",
+	action="store_true",
+    help="Outputs the path to each manifest as it is created.")
 arguments = p.parse_args()
 
 with open(arguments.file, 'rb') as f:
@@ -42,3 +47,5 @@ with open(arguments.file, 'rb') as f:
     for row in reader:
         shutil.copyfile(
             '/Volumes/munki/manifests/Template', '/Volumes/munki/manifests/' + row[0])
+        if arguments.verbose is True:
+            print '/Volumes/munki/manifests/' + row[0]
