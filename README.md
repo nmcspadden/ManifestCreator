@@ -15,6 +15,7 @@ A tool that allows Munki administrators to quickly create manifests based on a C
     ABCDEF10001
     ABCDEF10002
     ABCDEF10003
+    ...
     ```
 
     The header row can contain additional comma-seperated fields, which will be used to create additional keys in the resulting manifests. For example:
@@ -24,6 +25,7 @@ A tool that allows Munki administrators to quickly create manifests based on a C
     ABCDEF10001,"Loaner MacBook Pro",itservices
     ABCDEF10002,"Nick's iMac",nick
     ABCDEF10003,"Elliot's Mac Mini",elliot
+    ...
     ```
 
 1. Run `manifestcreator`:
@@ -35,5 +37,3 @@ A tool that allows Munki administrators to quickly create manifests based on a C
     :warning: `manifestcreator` will overwrite existing manifests with the same name as the newly created manifests.
 
 1. Check your manifests folder to verify that the new manifests have been created successfully.
-
-For additional help, run `./manifestcreator.py --help`.
