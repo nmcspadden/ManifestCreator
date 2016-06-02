@@ -70,7 +70,7 @@ else:
 with open(arguments.file, "rb") as f:
     reader = csv.reader(f)
     for row in reader:
-        shutil.copyfile(
-            template, repo + "/manifests/" + row[0])
+        new_manifest = repo + "/manifests/" + row[0]
+        shutil.copyfile(template, new_manifest)
         if arguments.verbose is True:
-            print repo + "/manifests/" + row[0]
+            print new_manifest
