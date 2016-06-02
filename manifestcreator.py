@@ -33,8 +33,8 @@ optional arguments:
 """
 
 import csv
-import shutil
 import argparse
+import plistlib
 
 p = argparse.ArgumentParser(
     description="Quickly create Munki manifests based on a CSV template.")
@@ -67,10 +67,16 @@ if arguments.template:
 else:
     template = repo + "/manifests/Template"
 
+try:
+    manifest_dict = plistlib.readPlist(template)
+except:
+    print "Manifest template might not be a valid plist file."
+    raise
+
 with open(arguments.file, "rb") as f:
     reader = csv.reader(f)
     for row in reader:
         new_manifest = repo + "/manifests/" + row[0]
-        shutil.copyfile(template, new_manifest)
+        plistlib.writePlist(manifest_dict, new_manifest)
         if arguments.verbose is True:
             print new_manifest
