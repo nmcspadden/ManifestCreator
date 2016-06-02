@@ -15,37 +15,71 @@
 # limitations under the License.
 
 """
-manifestcreator
-
-Quickly create Munki manifests based on a CSV template.
+A tool that allows Munki administrators to quickly create manifests based on a
+CSV containing serial numbers.
 
 positional arguments:
-  file           Path to the CSV template file.
+  file                 Path to the CSV file containing serial numbers.
 
 optional arguments:
-  -h, --help     show this help message and exit
-  -v, --verbose  Outputs the path to each manifest as it is created.
+  -h, --help           show this help message and exit
+  -v, --verbose        Outputs the path to each manifest as it is created.
+  --repo REPO          The path to the Munki repository you want to add
+                       manifests to. Defaults to /Volumes/munki.
+  --template TEMPLATE  The path to the file you want to use as your manifest
+                       template. Defaults to
+                       /Volumes/munki/manifests/Template.
 """
 
 import csv
-import shutil
 import argparse
+import plistlib
 
 p = argparse.ArgumentParser(
-    description="Quickly create Munki manifests based on a CSV template.")
+    description=("A tool that allows Munki administrators to quickly create "
+                 "manifests based on a CSV containing serial numbers."))
 p.add_argument(
     "file",
-    help="Path to the CSV template file.")
+    help="Path to the CSV file containing serial numbers.")
 p.add_argument(
     "-v", "--verbose",
-	action="store_true",
+    action="store_true",
     help="Outputs the path to each manifest as it is created.")
+p.add_argument(
+    "--repo",
+    action="store",
+    help=("The path to the Munki repository you want to add manifests to. "
+          "Defaults to /Volumes/munki."))
+p.add_argument(
+    "--template",
+    action="store",
+    help=("The path to the file you want to use as your manifest template. "
+          "Defaults to /Volumes/munki/manifests/Template."))
 arguments = p.parse_args()
 
-with open(arguments.file, 'rb') as f:
-    reader = csv.reader(f)
+if arguments.repo:
+    repo = arguments.repo
+else:
+    repo = "/Volumes/munki"
+
+if arguments.template:
+    template = arguments.template
+else:
+    template = repo + "/manifests/Template"
+
+try:
+    manifest_dict = plistlib.readPlist(template)
+except:
+    print "Manifest template might not be a valid plist file."
+    raise
+
+with open(arguments.file, "rb") as f:
+    reader = csv.DictReader(f)
     for row in reader:
-        shutil.copyfile(
-            '/Volumes/munki/manifests/Template', '/Volumes/munki/manifests/' + row[0])
+        new_manifest = repo + "/manifests/" + row["serial"]
+        for key in row:
+            if key != "serial":
+                manifest_dict[key] = row[key]
+        plistlib.writePlist(manifest_dict, new_manifest)
         if arguments.verbose is True:
-            print '/Volumes/munki/manifests/' + row[0]
+            print new_manifest
