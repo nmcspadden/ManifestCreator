@@ -37,10 +37,11 @@ import argparse
 import plistlib
 
 p = argparse.ArgumentParser(
-    description="Quickly create Munki manifests based on a CSV template.")
+    description=("A tool that allows Munki administrators to quickly create "
+                 "manifests based on a CSV containing serial numbers."))
 p.add_argument(
     "file",
-    help="Path to the CSV template file.")
+    help="Path to the CSV file containing serial numbers.")
 p.add_argument(
     "-v", "--verbose",
     action="store_true",
@@ -74,9 +75,12 @@ except:
     raise
 
 with open(arguments.file, "rb") as f:
-    reader = csv.reader(f)
+    reader = csv.DictReader(f)
     for row in reader:
-        new_manifest = repo + "/manifests/" + row[0]
+        new_manifest = repo + "/manifests/" + row["serial"]
+        for key in row:
+            if key != "serial":
+                manifest_dict[key] = row[key]
         plistlib.writePlist(manifest_dict, new_manifest)
         if arguments.verbose is True:
             print new_manifest
