@@ -20,11 +20,16 @@ manifestcreator
 Quickly create Munki manifests based on a CSV template.
 
 positional arguments:
-  file           Path to the CSV template file.
+  file                 Path to the CSV template file.
 
 optional arguments:
-  -h, --help     show this help message and exit
-  -v, --verbose  Outputs the path to each manifest as it is created.
+  -h, --help           show this help message and exit
+  -v, --verbose        Outputs the path to each manifest as it is created.
+  --repo REPO          The path to the Munki repository you want to add
+                       manifests to. Defaults to /Volumes/munki.
+  --template TEMPLATE  The path to the file you want to use as your manifest
+                       template. Defaults to
+                       /Volumes/munki/manifests/Template.
 """
 
 import csv
@@ -38,14 +43,34 @@ p.add_argument(
     help="Path to the CSV template file.")
 p.add_argument(
     "-v", "--verbose",
-	action="store_true",
+    action="store_true",
     help="Outputs the path to each manifest as it is created.")
+p.add_argument(
+    "--repo",
+    action="store",
+    help=("The path to the Munki repository you want to add manifests to. "
+          "Defaults to /Volumes/munki."))
+p.add_argument(
+    "--template",
+    action="store",
+    help=("The path to the file you want to use as your manifest template. "
+          "Defaults to /Volumes/munki/manifests/Template."))
 arguments = p.parse_args()
 
-with open(arguments.file, 'rb') as f:
+if arguments.repo:
+    repo = arguments.repo
+else:
+    repo = "/Volumes/munki"
+
+if arguments.template:
+    template = arguments.template
+else:
+    template = repo + "/manifests/Template"
+
+with open(arguments.file, "rb") as f:
     reader = csv.reader(f)
     for row in reader:
         shutil.copyfile(
-            '/Volumes/munki/manifests/Template', '/Volumes/munki/manifests/' + row[0])
+            template, repo + "/manifests/" + row[0])
         if arguments.verbose is True:
-            print '/Volumes/munki/manifests/' + row[0]
+            print repo + "/manifests/" + row[0]
