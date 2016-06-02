@@ -15,12 +15,11 @@
 # limitations under the License.
 
 """
-manifestcreator
-
-Quickly create Munki manifests based on a CSV template.
+A tool that allows Munki administrators to quickly create manifests based on a
+CSV containing serial numbers.
 
 positional arguments:
-  file                 Path to the CSV template file.
+  file                 Path to the CSV file containing serial numbers.
 
 optional arguments:
   -h, --help           show this help message and exit
