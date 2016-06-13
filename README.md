@@ -4,7 +4,7 @@ A tool that allows Munki administrators to quickly create manifests based on a C
 
 1. Create a template manifest.
 
-    This manifest should contain all the keys that will be _shared_ by the new serial number manifests you create. For example, you may want to include appropriate values for the `catalogs`, `managed_installs`, `managed_updates`, and `optional_installs` keys.
+    This manifest should contain all the keys that will be _shared_ by the new serial number manifests you create. For example, you may want to include appropriate values for the `catalogs` and `included_manifests` keys.
 
 1. Create a CSV file with serial numbers.
 
@@ -15,7 +15,6 @@ A tool that allows Munki administrators to quickly create manifests based on a C
     ABCDEF10001
     ABCDEF10002
     ABCDEF10003
-    ...
     ```
 
     The header row can contain additional comma-seperated fields, which will be used to create additional keys in the resulting manifests. For example:
@@ -25,7 +24,6 @@ A tool that allows Munki administrators to quickly create manifests based on a C
     ABCDEF10001,"Loaner MacBook Pro",itservices
     ABCDEF10002,"Nick's iMac",nick
     ABCDEF10003,"Elliot's Mac Mini",elliot
-    ...
     ```
 
 1. Run `manifestcreator`:
