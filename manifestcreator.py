@@ -34,6 +34,7 @@ optional arguments:
 import csv
 import argparse
 import plistlib
+import os
 
 p = argparse.ArgumentParser(
     description=("A tool that allows Munki administrators to quickly create "
@@ -55,6 +56,11 @@ p.add_argument(
     action="store",
     help=("The path to the file you want to use as your manifest template. "
           "Defaults to /Volumes/munki/manifests/Template."))
+p.add_argument(
+    "--nooverwrite",
+    action="store_true",
+    help=("Do not overwrite existing files. Does not check to ensure the "
+          "existing files match the template."))
 arguments = p.parse_args()
 
 if arguments.repo:
@@ -80,6 +86,16 @@ with open(arguments.file, "rb") as f:
         for key in row:
             if key != "serial":
                 manifest_dict[key] = row[key]
-        plistlib.writePlist(manifest_dict, new_manifest)
+        if arguments.nooverwrite is True:
+            if os.path.exists(new_manifest):
+                if arguments.verbose is True:
+                    print "Skipping %s, file exists" % new_manifest
+                continue
+            else:
+                plistlib.writePlist(manifest_dict, new_manifest)
+        else:
+            # If false just write write the plists anyway
+            plistlib.writePlist(manifest_dict, new_manifest)
+
         if arguments.verbose is True:
             print new_manifest
