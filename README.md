@@ -32,6 +32,6 @@ A tool that allows Munki administrators to quickly create manifests based on a C
     ./manifestcreator.py --repo /path/to/munki_repo /path/to/serials.csv
     ```
 
-    :warning: `manifestcreator` will overwrite existing manifests with the same name as the newly created manifests.
+    :warning: `manifestcreator` will overwrite existing manifests with the same name as the newly created manifests if you do not pass the "--nooverwrite" option.
 
 1. Check your manifests folder to verify that the new manifests have been created successfully.
